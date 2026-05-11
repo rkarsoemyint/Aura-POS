@@ -5,7 +5,7 @@ Aura POS သည် Python (Django) နှင့် Tailwind CSS ကို အသ
 
  Live Demo
 သင်ကိုယ်တိုင် စမ်းသပ်ကြည့်ရှုနိုင်ရန် PythonAnywhere တွင် တင်ထားပါသည်။
-[ Live Demo Link ဤနေရာတွင် ထည့်ပါ]
+[ https://aurapos.pythonanywhere.com/ ]
 
  Demo Credentials
 စမ်းသပ်ရန် အောက်ပါ Account များဖြင့် Login ဝင်ရောက်နိုင်ပါသည်-
