@@ -1,0 +1,60 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Header Section -->
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold italic">{{ title }}</h2>
+        <a href="{% url 'inventory' %}" class="btn btn-ghost btn-sm">
+            <i class="fa-solid fa-arrow-left"></i> Back to Inventory
+        </a>
+    </div>
+
+    <!-- Form Card -->
+    <div class="card bg-base-100 shadow-xl border border-base-300">
+        <form method="POST" enctype="multipart/form-data" class="card-body">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+               
+                {% for field in form %}
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text font-bold">{{ field.label }}</span>
+                    </label>
+                    
+                    <div class="{% if field.errors %}border-error{% endif %}">
+                        {{ field }}
+                    </div>
+                    {% if field.errors %}
+                    <label class="label">
+                        <span class="label-text-alt text-error">{{ field.errors.0 }}</span>
+                    </label>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="card-actions justify-end mt-8">
+                <button type="submit" class="btn btn-primary px-8">
+                    <i class="fa-solid fa-save mr-2"></i> Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    input, select, textarea {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid #d1d5db; 
+        background-color: transparent;
+    }
+    input:focus {
+        outline: 2px solid #570df8;
+        border-color: transparent;
+    }
+</style>
+{% endblock %}

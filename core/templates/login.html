@@ -1,0 +1,90 @@
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Aura POS</title> {% tailwind_css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .demo-btn { @apply btn btn-xs btn-outline btn-primary normal-case text-[10px] py-0 h-6 min-h-0; }
+    </style>
+</head>
+
+<body class="bg-base-200 min-h-screen flex items-center justify-center p-4">
+
+    <div class="card w-full max-w-sm bg-base-100 shadow-2xl border border-base-300">
+        <div class="card-body">
+            <div class="flex flex-col items-center mb-6 text-center">
+                <div class="bg-primary p-4 rounded-2xl text-white mb-3 shadow-lg shadow-primary/30">
+                    <i class="fa-solid fa-wand-magic-sparkles text-3xl"></i> </div>
+                <h2 class="text-3xl font-black italic tracking-tighter text-primary">AURA POS</h2>
+                <p class="text-sm opacity-50 font-medium">Efficiently Radiating Your Business</p>
+            </div>
+
+            <form method="post" id="loginForm">
+                {% csrf_token %}
+
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text font-bold">Username</span>
+                    </label>
+                    <input type="text" id="username" name="username" placeholder="Enter username" 
+                           class="input input-bordered w-full focus:input-primary transition-all" required />
+                </div>
+
+                <div class="form-control w-full mt-4">
+                    <label class="label">
+                        <span class="label-text font-bold">Password</span>
+                    </label>
+                    <input type="password" id="password" name="password" placeholder="Enter password"
+                           class="input input-bordered w-full focus:input-primary transition-all" required />
+                </div>
+
+                {% if form.errors %}
+                <div class="alert alert-error mt-4 p-3 text-xs rounded-lg">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                    <span>Invalid username or password!</span>
+                </div>
+                {% endif %}
+
+                <div class="form-control mt-8">
+                    <button type="submit" class="btn btn-primary w-full text-lg shadow-lg">
+                        Login <i class="fa-solid fa-right-to-bracket ml-2 text-sm"></i>
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-8 p-4 bg-primary/5 rounded-xl border border-primary/10">
+                <p class="text-[10px] font-black text-primary uppercase mb-3 tracking-widest text-center opacity-70">Quick Demo Access</p>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between bg-white p-2 rounded-lg shadow-sm border border-base-200">
+                        <div class="text-[11px]">
+                            <span class="font-bold text-gray-500">Admin:</span> admin
+                        </div>
+                        <button onclick="fillLogin('admin', 'superuser')" class="btn btn-xs btn-primary px-3 rounded-md">Fill Admin</button>
+                    </div>
+                    <div class="flex items-center justify-between bg-white p-2 rounded-lg shadow-sm border border-base-200">
+                        <div class="text-[11px]">
+                            <span class="font-bold text-gray-500">Staff:</span> Cashier01
+                        </div>
+                        <button onclick="fillLogin('Cashier01', 'superuser')" class="btn btn-xs btn-outline btn-primary px-3 rounded-md">Fill Cashier</button>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-center text-[10px] mt-6 opacity-30 italic">© 2026 Aura POS - Developed by Thant Zin Oo</p>
+        </div>
+    </div>
+
+    <script>
+        function fillLogin(user, pass) {
+            document.getElementById('username').value = user;
+            document.getElementById('password').value = pass;
+            
+        }
+    </script>
+
+</body>
+</html>

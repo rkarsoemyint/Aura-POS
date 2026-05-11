@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-base-100 p-6 rounded-t-xl border border-b-0 shadow-sm mt-4">
+    <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-6">
+
+        <div class="text-center lg:text-left shrink-0">
+            <h2 class="text-2xl font-bold text-gray-800">Inventory Management</h2>
+            <div class="badge badge-primary badge-sm mt-1 px-3 py-3 font-medium">
+                Total: {{ products|length }} Products
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row items-center gap-4 w-full lg:w-auto">
+
+            <div class="relative w-full md:w-80">
+                <div style="position: absolute; top: 50%; left: 12px; transform: translateY(-50%); z-index: 10;">
+                    <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+                </div>
+                <input type="text" 
+                       id="inventorySearch" 
+                       onkeyup="searchInventory()" 
+                       placeholder="Search name or barcode..." 
+                       class="input input-bordered w-full" 
+                       style="padding-left: 40px !important; height: 48px;" />
+            </div>
+
+            <div class="flex gap-2 w-full md:w-auto">
+                <a href="{% url 'product_add' %}" 
+                   class="btn btn-primary gap-2 flex-1 md:flex-none h-[48px] px-6 shadow-sm">
+                    <i class="fa-solid fa-plus"></i>
+                    <span class="whitespace-nowrap">Add Product</span>
+                </a>
+                <button class="btn btn-outline h-[48px] px-4 shadow-sm" title="Export Excel">
+                    <i class="fa-solid fa-file-export text-lg"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="bg-base-100 rounded-xl shadow border overflow-x-auto">
+    <table class="table w-full" id="inventoryTable">
+        <thead>
+            <tr class="bg-base-200">
+                <th>Product Info</th>
+                <th>Barcode</th> <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr class="hover:bg-base-200 transition-colors">
+                <td>
+                    <div class="flex items-center gap-3">
+                        <div class="avatar">
+                            <div class="mask mask-squircle w-10 h-10 bg-base-300">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                {% else %}
+                                    <div class="flex items-center justify-center h-full"><i class="fa-solid fa-image opacity-20"></i></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div>
+                            <div class="font-bold">{{ product.name }}</div>
+                            <div class="text-xs opacity-50">{{ product.category.name }}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="font-mono text-xs">{{ product.barcode|default:"---" }}</td> <td>{{ product.category.name }}</td>
+                <td class="font-semibold">{{ product.price|floatformat:0 }} MMK</td>
+                <td>
+                    <div class="flex flex-col">
+                        <span class="font-mono {% if product.stock < 5 %}text-error font-bold{% endif %}">
+                            {{ product.stock }}
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    {% if product.stock <= 0 %}
+                        <span class="badge badge-ghost text-error border-error px-3">Out of Stock</span>
+                    {% elif product.stock < 5 %}
+                        <span class="badge badge-warning gap-1"><i class="fa-solid fa-triangle-exclamation text-[10px]"></i> Low Stock</span>
+                    {% else %}
+                        <span class="badge badge-success text-white px-3">In Stock</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <div class="join">
+                        <a href="{% url 'product_edit' product.id %}" class="btn btn-ghost btn-xs text-info hover:bg-info/10 join-item">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                        </a>
+                        </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center py-10 opacity-50 italic">No products found in inventory.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+function searchInventory() {
+    let input = document.getElementById('inventorySearch');
+    let filter = input.value.toLowerCase();
+    let table = document.getElementById('inventoryTable');
+    let tr = table.getElementsByTagName('tr');
+
+    for (let i = 1; i < tr.length; i++) {
+        let tdName = tr[i].getElementsByTagName('td')[0];
+        let tdBarcode = tr[i].getElementsByTagName('td')[1];
+        if (tdName || tdBarcode) {
+            let textName = tdName.textContent || tdName.innerText;
+            let textBarcode = tdBarcode.textContent || tdBarcode.innerText;
+            if (textName.toLowerCase().indexOf(filter) > -1 || textBarcode.toLowerCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+</script>
+{% endblock %}

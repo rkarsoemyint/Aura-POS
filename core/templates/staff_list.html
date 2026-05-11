@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold">Staff Management</h2>
+    <a href="{% url 'staff_add' %}" class="btn btn-primary btn-sm">+ Add New Staff</a>
+</div>
+
+<div class="bg-base-100 rounded-xl shadow border overflow-x-auto">
+    <table class="table w-full">
+        <thead>
+            <tr class="bg-base-200">
+                <th>Username</th>
+                <th>Joined Date</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for staff in staffs %}
+            <tr>
+                <td>
+                    <div class="flex items-center gap-3">
+                        <div class="avatar placeholder">
+                            <div class="bg-neutral text-neutral-content rounded-full w-8">
+                                <span>{{ staff.username|slice:":1"|upper }}</span>
+                            </div>
+                        </div>
+                        <div class="font-bold">{{ staff.username }}</div>
+                    </div>
+                </td>
+                <td>{{ staff.date_joined|date:"d M Y" }}</td>
+                <td>
+                    {% if staff.is_superuser %}
+                    <div class="badge badge-primary">Admin</div>
+                    {% else %}
+                    <div class="badge badge-ghost">Staff</div>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if staff.is_active %}
+                    <span class="text-success flex items-center gap-1"><i class="fa-solid fa-circle text-[8px]"></i>
+                        Active</span>
+                    {% else %}
+                    <span class="text-error flex items-center gap-1"><i class="fa-solid fa-circle text-[8px]"></i>
+                        Inactive</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="flex gap-2">
+                        <a href="{% url 'staff_edit' staff.id %}" class="btn btn-ghost btn-xs text-info">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                        </a>
+
+                        {% if not staff.is_superuser %}
+                        <a href="{% url 'staff_delete' staff.id %}"
+                            onclick="return confirm('ဒီဝန်ထမ်းကို တကယ်ဖျက်မှာလားဗျာ?')"
+                            class="btn btn-ghost btn-xs text-error">
+                            <i class="fa-solid fa-trash"></i> Delete
+                        </a>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
